@@ -1,19 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: app
+  name: umami
   namespace: argo-cd
 spec:
   project: default
   source:
     repoURL: https://github.com/ahmedmabdi/EKS.git
     targetRevision: HEAD
-    path: terraform/kubernetes                
-    directory:
-      recurse: true
+    path: apps/umami
   destination:
     server: https://kubernetes.default.svc
-    namespace: app
+    namespace: umami
   syncPolicy:
     automated:
       prune: true
