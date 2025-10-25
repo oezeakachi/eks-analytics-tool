@@ -18,5 +18,5 @@ server:
       - argocd.ahmedumami.click
     tls:
       - hosts:
-          - argocd.ahmedumami.click
+          - argocd.ahmedumami.click 
         secretName: argocd-server-tls

@@ -36,7 +36,7 @@ resource "aws_eks_pod_identity_association" "cert_manager" {
 resource "aws_eks_pod_identity_association" "external_dns" {
   cluster_name         = local.name
   namespace            = "external-dns"
-  service_account = "external-dns"
+  service_account = "external-dns" 
   role_arn         = module.external_dns_pod_identity.iam_role_arn
 }
 

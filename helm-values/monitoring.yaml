@@ -10,7 +10,7 @@ prometheus:
     annotations:
       cert-manager.io/cluster-issuer: "issuer"
     hosts:
-      - prometheus.ahmedumami.click
+      - prometheus.ahmedumami.click 
     tls:
       - hosts:
           - prometheus.ahmedumami.click

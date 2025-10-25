@@ -61,7 +61,7 @@ output "db_port" {
 }
 
 resource "aws_ssm_parameter" "database_url" {
-  name  = "/umami/DATABASE_URL"
+  name  = "/umami/DATABASE_URL" 
   type  = "SecureString"
 value = "postgresql://${urlencode(data.aws_ssm_parameter.rds_username.value)}:${urlencode(data.aws_ssm_parameter.rds_password.value)}@${aws_db_instance.umami.endpoint}/${aws_db_instance.umami.db_name}"
 }

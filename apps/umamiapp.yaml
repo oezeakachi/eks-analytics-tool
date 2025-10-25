@@ -75,4 +75,4 @@ spec:
   tls:
   - hosts:
     - umami.ahmedumami.click
-    secretName: umami-tls
+    secretName: umami-tls 
