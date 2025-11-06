@@ -17,4 +17,4 @@ extraArgs:
   - --enable-certificate-owner-ref=true                   
 
 webhook: 
-  timeoutSeconds: 30 
+  timeoutSeconds: 30

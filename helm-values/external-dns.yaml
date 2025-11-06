@@ -17,3 +17,6 @@ registry: txt
 txtOwnerId: eks-cluster
 interval: 1m
 logLevel: info
+
+args:
+  - --aws-use-cname-records
