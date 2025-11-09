@@ -6,7 +6,7 @@ terraform {
       source  = "hashicorp/aws"
       version = ">= 6.2"
     }
-    
+
     postgresql = {
       source  = "cyrilgdn/postgresql"
       version = "~> 1.25"
@@ -19,7 +19,7 @@ terraform {
 
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = ">= 2.11.0" 
+      version = ">= 2.11.0"
     }
   }
 

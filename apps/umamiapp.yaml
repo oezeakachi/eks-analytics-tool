@@ -22,10 +22,16 @@ spec:
     spec:
       containers:
       - name: app
-        image: 471112781681.dkr.ecr.eu-west-2.amazonaws.com/eks-game:latest
+        image: 471112781681.dkr.ecr.eu-west-2.amazonaws.com/umami:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: umami-db-secret
+              key: database_url
 ---
 apiVersion: v1
 kind: Service

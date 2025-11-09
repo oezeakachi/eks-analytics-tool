@@ -29,27 +29,24 @@ module "my_app_pod_identity" {
   tags = local.tags
 }
 
-
 resource "aws_eks_pod_identity_association" "cert_manager" {
-  cluster_name         = local.name 
-  namespace            = "cert-manager"
+  cluster_name    = local.name
+  namespace       = "cert-manager"
   service_account = "cert-manager"
-  role_arn         = module.cert_manager_pod_identity.iam_role_arn
+  role_arn        = module.cert_manager_pod_identity.iam_role_arn
 
   depends_on = [
-    module.eks,
-    module.cert_manager_pod_identity,
     helm_release.cert_manager
   ]
 }
 
 resource "aws_eks_pod_identity_association" "external_dns" {
-  cluster_name         = local.name
-  namespace            = "external-dns"
-  service_account = "external-dns" 
-  role_arn         = module.external_dns_pod_identity.iam_role_arn
+  cluster_name    = local.name
+  namespace       = "external-dns"
+  service_account = "external-dns"
+  role_arn        = module.external_dns_pod_identity.iam_role_arn
 
-   depends_on = [
+  depends_on = [
     module.eks,
     module.external_dns_pod_identity,
     helm_release.external_dns
@@ -57,10 +54,10 @@ resource "aws_eks_pod_identity_association" "external_dns" {
 }
 
 resource "aws_eks_pod_identity_association" "my_app" {
-  cluster_name         = local.name
-  namespace            = "default"
+  cluster_name    = local.name
+  namespace       = "default"
   service_account = "my-app"
-  role_arn         = module.my_app_pod_identity.iam_role_arn
+  role_arn        = module.my_app_pod_identity.iam_role_arn
 
   depends_on = [
     module.eks
