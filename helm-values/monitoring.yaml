@@ -26,7 +26,7 @@ grafana:
     enabled: true
     ingressClassName: nginx
     annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
+      cert-manager.io/cluster-issuer: issuer
       external-dns.alpha.kubernetes.io/hostname: grafana.ahmedumami.click
     hosts:
       - grafana.ahmedumami.click
