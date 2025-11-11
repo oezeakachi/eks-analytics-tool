@@ -41,7 +41,6 @@ resource "aws_db_instance" "umami" {
   identifier             = "umami-db"
   db_name                = "umami"
   engine                 = "postgres"
-  engine_version         = "16.3"
   instance_class         = "db.t3.micro"
   allocated_storage      = 20
   username               = data.aws_ssm_parameter.rds_username.value
@@ -61,20 +60,20 @@ output "db_port" {
 }
 
 resource "aws_ssm_parameter" "database_url" {
-  name  = "/umami/DATABASE_URL" 
+  name  = "/umami/DATABASE_URL"
   type  = "SecureString"
-value = "postgresql://${urlencode(data.aws_ssm_parameter.rds_username.value)}:${urlencode(data.aws_ssm_parameter.rds_password.value)}@${aws_db_instance.umami.endpoint}/${aws_db_instance.umami.db_name}"
+  value = "postgresql://${urlencode(data.aws_ssm_parameter.rds_username.value)}:${urlencode(data.aws_ssm_parameter.rds_password.value)}@${aws_db_instance.umami.endpoint}/${aws_db_instance.umami.db_name}"
 }
 
 resource "kubernetes_secret" "umami_db_secret" {
   metadata {
     name      = "umami-db-secret"
-    namespace = "umami" 
+    namespace = "app"
   }
 
   data = {
     database_url = aws_ssm_parameter.database_url.value
-    }
+  }
 
   type = "Opaque"
 }
