@@ -3,15 +3,17 @@ module "eks" {
   version = "~> 21.0"
 
   name               = "eks-cluster"
-  kubernetes_version = "1.33"
+  kubernetes_version = "1.30"
 
   addons = {
-    coredns = {}
-    eks-pod-identity-agent = {
-      before_compute = true
+    coredns = { most_recent = true
     }
-    kube-proxy = {}
+    eks-pod-identity-agent = { most_recent = true
+    }
+    kube-proxy = { most_recent = true
+    }
     vpc-cni = {
+      most_recent    = true
       before_compute = true
     }
   }
