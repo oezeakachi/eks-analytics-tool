@@ -1,0 +1,83 @@
+name: Terraform Apply & Kubernetes Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      ecr_repository:
+        required: true
+        default: 'umami'
+      image_tag:
+        required: true
+        default: 'latest'
+
+jobs:
+  terraform-apply:
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: eu-west-2
+      TF_VAR_container_image: "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-2.amazonaws.com/${{ github.event.inputs.ecr_repository }}:${{ github.event.inputs.image_tag }}"
+      TF_VAR_container_name: "${{ github.event.inputs.ecr_repository }}"
+      TF_VAR_container_port: "3000"
+      TF_VAR_rds_db_name: "${{ secrets.RDS_DB_NAME }}"
+      TF_VAR_rds_username: "${{ secrets.RDS_USERNAME }}"
+      TF_VAR_rds_password: "${{ secrets.RDS_PASSWORD }}"
+      TF_VAR_rds_port: "5432"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.7.0
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+
+  k8s-deploy:
+    needs: terraform-apply
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: eu-west-2
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: '1.30.0'
+
+      - name: Install helm
+        uses: azure/setup-helm@v3
+        with:
+          version: '3.12.0'
+
+      - name: Update kubeconfig for EKS
+        run: |
+          aws eks update-kubeconfig --name eks-cluster --region $AWS_REGION
+
+      - name: Apply Kubernetes Manifests
+        run: |
+          kubectl apply -f EKS/manifests/
