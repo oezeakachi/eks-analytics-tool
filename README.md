@@ -66,7 +66,7 @@ Key components include:
 
 ![ArgoCD Screenshot](media/argocd.png)  
 
-### Monitoring Stack (Grafana)
+### Monitoring Stack (Grafana/Prometheus)
 
 ![Monitoring Screenshot](media/grafana1.png) 
 ![Monitoring Screenshot](media/grafana.png)  
