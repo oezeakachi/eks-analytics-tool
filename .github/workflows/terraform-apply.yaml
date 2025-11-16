@@ -15,13 +15,13 @@ jobs:
     runs-on: ubuntu-latest
     env:
       AWS_REGION: eu-west-2
-      TF_VAR_container_image: "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-2.amazonaws.com/${{ github.event.inputs.ecr_repository }}:${{ github.event.inputs.image_tag }}"
-      TF_VAR_container_name: "${{ github.event.inputs.ecr_repository }}"
-      TF_VAR_container_port: "3000"
-      TF_VAR_rds_db_name: "${{ secrets.RDS_DB_NAME }}"
-      TF_VAR_rds_username: "${{ secrets.RDS_USERNAME }}"
-      TF_VAR_rds_password: "${{ secrets.RDS_PASSWORD }}"
-      TF_VAR_rds_port: "5432"
+      container_image: "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-2.amazonaws.com/${{ github.event.inputs.ecr_repository }}:${{ github.event.inputs.image_tag }}"
+      container_name: "${{ github.event.inputs.ecr_repository }}"
+      container_port: "3000"
+      rds_db_name: "${{ secrets.RDS_DB_NAME }}"
+      rds_username: "${{ secrets.RDS_USERNAME }}"
+      rds_password: "${{ secrets.RDS_PASSWORD }}"
+      rds_port: "5432"
 
     steps:
       - name: Checkout repository

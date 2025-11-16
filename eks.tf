@@ -16,7 +16,6 @@ module "eks" {
       most_recent    = true
       before_compute = true
     }
-    
   }
 
   vpc_id                   = module.vpc.vpc_id
