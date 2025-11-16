@@ -13,9 +13,9 @@ This solution provides:
 - Automated control plane management  
 - Secure networking with VPC CNI  
 - Integration with IAM for access control  
-- Scalability via managed node groups and Fargate profiles  
+- Scalability via managed node groups 
 - Seamless support for GitOps using ArgoCD  
-- Robust monitoring and alerting via CloudWatch and Prometheus  
+- Robust monitoring and alerting via Grafana and Prometheus  
 
 ---
 
@@ -46,12 +46,12 @@ This solution provides:
 Key components include:
 
 - VPC with public and private subnets across 2 Availability Zones  
-- Managed EKS control plane with worker node groups and Fargate profiles  
+- Managed EKS control plane with worker node groups 
 - Single Application Load Balancer (ALB) for ingress traffic  
 - Amazon RDS (PostgreSQL) for backend persistence  
 - S3 bucket with native locking for Terraform state management  
 - ArgoCD deployed in cluster for continuous delivery  
-- Monitoring stack: Prometheus + Grafana + CloudWatch
+- Monitoring stack: Prometheus + Grafana
 
 ---
 
