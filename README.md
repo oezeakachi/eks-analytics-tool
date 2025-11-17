@@ -1,58 +1,52 @@
-# EKS Deployment – Web Analaytics Tool
+# EKS Deployment – Web Analytics Platform
 
-This project provisions a fully managed **Amazon EKS** cluster with end-to-end infrastructure deployed via **Terraform**, containerized app delivery through **ArgoCD** (GitOps), and integrated observability. It is designed with a strong focus on **cost-optimization**, security, and operational best practices for production workloads.
+This project deploys a production ready Amazon EKS environment to host the Umami web analytics application with fully automated, scalable and secure infrastructure. The stack uses Terraform for end to end provisioning, ArgoCD for GitOps based application delivery and a complete observability suite for real time monitoring.
 
-The primary application deployed is the **Umami web analytics** platform for XYZ, enabling scalable and privacy-focused analytics to handle growing traffic demands. Deploying Umami on EKS ensures high availability, seamless scaling, and robust security compliance, all managed with infrastructure-as-code and GitOps workflows to support continuous delivery and operational efficiency.
+The solution integrates multiple AWS services including ECR, RDS PostgreSQL, Route53 and IAM to provide a modern, cost efficient and resilient platform for running a privacy focused analytics tool at scale. By combining Kubernetes best practices with GitOps workflows, the deployment supports continuous delivery, high availability across multiple Availability Zones and strong operational governance.
 
 ---
 
 ## Why Amazon EKS?
 
-EKS was chosen for its seamless integration with the AWS ecosystem, managed control plane, and support for Kubernetes-native workflows.  
-This solution provides:
+EKS was selected for its strong AWS integration and ability to run secure, scalable and Kubernetes native workloads.  
+This deployment benefits from:
 
-- Automated control plane management  
-- Secure networking with VPC CNI  
-- Integration with IAM for access control  
-- Scalability via managed node groups 
-- Seamless support for GitOps using ArgoCD  
-- Robust monitoring and alerting via Grafana and Prometheus  
+- Automated and highly available Kubernetes control plane  
+- Secure pod networking using AWS VPC CNI  
+- Pod Identity for fine-grained IAM access  
+- Managed node groups for elasticity and resilience  
+- GitOps workflows powered by ArgoCD  
+- Centralized monitoring with Prometheus and Grafana  
+- Native integrations with ECR, RDS, Route53 and other AWS services  
 
 ---
 
 ## Project Highlights
 
-| Feature                     | Description                                                                                  |
-|-----------------------------|----------------------------------------------------------------------------------------------|
-| **Infrastructure as Code**  | Terraform provisions VPC, EKS cluster, node groups, RDS, ALB, IAM roles, Security Groups      |
-| **Networking**              | Public + private subnets spanning 3 AZs; single NAT Gateway to reduce cost without sacrificing access |
-| **Database**                | Single-AZ Amazon RDS PostgreSQL instance to balance cost and durability                      |
-| **Container Orchestration** | Kubernetes managed by EKS, with GitOps deployments via ArgoCD                                |
-| **CI/CD & GitOps**          | Application manifests and Helm charts deployed using ArgoCD, enabling declarative workflows |
-| **Monitoring & Logging**    | Prometheus & Grafana integrated for observability               |
-| **State Management**        | Terraform state stored in S3 with **native S3 locking** enabled for consistency              |
-| **Security & IAM**          | Fine-grained IAM roles and policies applied to cluster components                            |
+| Feature / Component            | Description |
+|-------------------------------|-------------|
+| **Infrastructure as Code**    | Full AWS environment provisioned using Terraform: VPC, subnets, EKS, node groups, RDS, IAM roles, Route53, Security Groups. |
+| **Networking**                | 3 public + 3 private subnets across 3 AZs; Internet-facing AWS **ALB** for Ingress; single NAT Gateway for cost-optimized egress. |
+| **EKS & Kubernetes**          | Amazon EKS cluster with managed node groups, VPC CNI, CoreDNS, Kube-Proxy, and Pod Identity enabled for secure AWS access. |
+| **Helm Deployments**          | Helm used to install core cluster components: NGINX Ingress Controller, cert-manager, ExternalDNS, ArgoCD, Prometheus/Grafana. |
+| **Application Delivery**      | ArgoCD manages GitOps deployment of the Umami application using Helm/K8s manifests stored in GitHub. |
+| **CI/CD Pipeline**            | GitHub Actions builds Docker images, pushes to Amazon ECR, and triggers ArgoCD sync for automated app delivery. |
+| **Database Layer**            | Amazon RDS PostgreSQL (private subnets) with secure SG rules, powered by SSM-managed credentials. |
+| **DNS & Certificates**        | Route53 + ExternalDNS automate DNS updates; cert-manager issues TLS certificates via ClusterIssuer. |
+| **Monitoring & Logging**      | Kube-Prometheus-Stack provides cluster metrics, alerting, and Grafana dashboards for observability. |
+| **State Management**          | Terraform state stored in S3 backend with **native S3 object locking** for consistency and drift protection. |
+| **Security Model**            | Pod Identity for role-based AWS access; least-privilege IAM; restricted SG rules; private subnets for RDS and workloads. |
 
 > **Cost Controls:**  
-> - Single NAT Gateway to limit monthly costs while ensuring outbound internet access for private subnets.  
-> - Single-AZ RDS instance optimized for development or low-throughput environments.  
-> - Minimal node group sizes with auto-scaling for cost efficiency.
+> - Single NAT Gateway to reduce monthly cost while maintaining internet access for private workloads  
+> - Single-AZ RDS instance for cost efficiency in non-production setups  
+> - Minimal EKS managed node group with autoscaling for elasticity and savings  
 
 ---
 
 ## Architecture Diagram
 
 ![Architecture Diagram](media/architectureeks.png) 
-
-Key components include:
-
-- VPC with public and private subnets across 3 Availability Zones  
-- Managed EKS control plane with worker node groups 
-- Single Application Load Balancer (ALB) for ingress traffic  
-- Amazon RDS (PostgreSQL) for backend persistence  
-- S3 bucket with native locking for Terraform state management  
-- ArgoCD deployed in cluster for continuous delivery  
-- Monitoring stack: Prometheus + Grafana
 
 ---
 
@@ -86,15 +80,35 @@ Below is a concise summary of issues I encountered during the EKS deployment, th
 
 ## Future Improvements
 
-- Add **AWS WAF** for web application protection  
-- Enable **Multi-AZ RDS** for high availability and failover  
-- Integrate **AWS Secrets Manager** for enhanced secret management  
-- Add **NAT Gateway in other AZs** for fault tolerance  
-- Implement **Security Hub** and **GuardDuty** for advanced security posture monitoring  
+Planned enhancements based on the AWS Well-Architected Framework pillars:
+
+### Security
+- Add **AWS WAF** in front of the NLB/Ingress to protect against common web exploits  
+- Integrate **AWS Secrets Manager** for centralized, rotation-capable secret storage  
+- Enable **GuardDuty**, **Security Hub**, and **Inspector** for continuous security posture monitoring  
+- Enforce **private ECR access** using VPC endpoints for isolation  
+
+### Reliability
+- Upgrade RDS to **Multi-AZ** for improved fault tolerance and automatic failover  
+- Deploy **NAT Gateways in each AZ** to prevent single-AZ dependency  
+- Add **Cluster Autoscaler** + **HPA** for application and infrastructure-level scaling  
+
+### Performance Efficiency
+- Enable **horizontal scaling** for Umami to support load spikes  
+- Configure **RDS Performance Insights** for query-level optimization  
+
+### Cost Optimization
+- Move logs/metrics to **Amazon Managed Prometheus/Grafana** to reduce in-cluster resource usage  
+- Optimize storage with **gp3 volumes** for EKS and RDS  
+
+### Operational Excellence
+- Implement **Centralized logging** using OpenSearch or CloudWatch Logs with structured output  
+- Add **Blue/Green or Canary deployments** using Argo Rollouts  
 
 ---
 
 ## CI/CD Workflows
+This project includes fully automated CI/CD pipelines that handle image builds, infrastructure deployment, and continuous delivery to the EKS cluster.
 
 - **Build & Push Container Images**
 
@@ -103,6 +117,5 @@ Below is a concise summary of issues I encountered during the EKS deployment, th
 - **Terraform Plan & Apply**
 
   ![Terraform Apply](media/tapply.png)  
-
 
 ---
