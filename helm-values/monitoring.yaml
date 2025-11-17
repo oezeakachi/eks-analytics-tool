@@ -19,7 +19,7 @@ prometheus:
 
 grafana:
   adminUser: admin
-  adminPassword: "SuperSecurePassword123"
+  adminPassword: 
   service:
     type: ClusterIP
   ingress:
