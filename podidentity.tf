@@ -22,13 +22,6 @@ module "external_dns_pod_identity" {
   tags = local.tags
 }
 
-module "my_app_pod_identity" {
-  source = "terraform-aws-modules/eks-pod-identity/aws"
-  name   = "my-app"
-
-  tags = local.tags
-}
-
 resource "aws_eks_pod_identity_association" "cert_manager" {
   cluster_name    = local.name
   namespace       = "cert-manager"
@@ -50,16 +43,5 @@ resource "aws_eks_pod_identity_association" "external_dns" {
     module.eks,
     module.external_dns_pod_identity,
     helm_release.external_dns
-  ]
-}
-
-resource "aws_eks_pod_identity_association" "my_app" {
-  cluster_name    = local.name
-  namespace       = "default"
-  service_account = "my-app"
-  role_arn        = module.my_app_pod_identity.iam_role_arn
-
-  depends_on = [
-    module.eks
   ]
 }
