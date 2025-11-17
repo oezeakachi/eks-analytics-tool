@@ -77,13 +77,27 @@ Below is a concise summary of issues I encountered during the EKS deployment, th
 | Argo CD Service “Not Connected” UI Issue | Visualization limitation—Service selects Pods, no ownerReferences to Deployment | Verified labels & endpoints; no fix needed                    | Use `kubectl get endpoints` to confirm Service routing |
 | Certificate Not Issued on EKS | Certificate resource created before Issuer fully reconciled; stale ACME challenges; cert-manager controller delayed reconciliation | Delete stuck CertificateRequest & ACME Challenge, restart cert-manager deployment, monitor Certificate status | Use `depends_on` in Terraform for Certificate → Issuer; split apply stages: cert-manager+Issuer first, then Certificates |
 
+---
+
+## CI/CD Workflows
+This project includes fully automated CI/CD pipelines that handle image builds, infrastructure deployment, and continuous delivery to the EKS cluster.
+
+- **Build & Push Container Images**
+
+  ![Build & Push](media/build-push.png)  
+
+- **Terraform Plan & Apply**
+
+  ![Terraform Apply](media/tapply.png)  
+
+---
 
 ## Future Improvements
 
-Planned enhancements based on the AWS Well-Architected Framework pillars:
+Planned enhancements for production environments based on the AWS Well-Architected Framework pillars:
 
 ### Security
-- Add **AWS WAF** in front of the NLB/Ingress to protect against common web exploits  
+- Add **AWS WAF** in front of the ALB/Ingress to protect against common web exploits  
 - Integrate **AWS Secrets Manager** for centralized, rotation-capable secret storage  
 - Enable **GuardDuty**, **Security Hub**, and **Inspector** for continuous security posture monitoring  
 - Enforce **private ECR access** using VPC endpoints for isolation  
@@ -105,17 +119,3 @@ Planned enhancements based on the AWS Well-Architected Framework pillars:
 - Implement **Centralized logging** using OpenSearch or CloudWatch Logs with structured output  
 - Add **Blue/Green or Canary deployments** using Argo Rollouts  
 
----
-
-## CI/CD Workflows
-This project includes fully automated CI/CD pipelines that handle image builds, infrastructure deployment, and continuous delivery to the EKS cluster.
-
-- **Build & Push Container Images**
-
-  ![Build & Push](media/build-push.png)  
-
-- **Terraform Plan & Apply**
-
-  ![Terraform Apply](media/tapply.png)  
-
----
