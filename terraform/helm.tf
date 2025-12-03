@@ -58,7 +58,7 @@ resource "helm_release" "argocd_deploy" {
   namespace        = "argo-cd"
 
   values = [
-    file("${path.module}../helm-values/argocd.yaml")
+    file("${path.module}/../helm-values/argocd.yaml")
   ]
 
   depends_on = [helm_release.nginx_ingress, helm_release.cert_manager, helm_release.external_dns]
@@ -76,7 +76,7 @@ resource "helm_release" "prometheus" {
   namespace        = "monitoring"
 
   values = [
-    file("${path.module}../helm-values/monitoring.yaml")
+    file("${path.module}/../helm-values/monitoring.yaml")
   ]
 
   depends_on = [helm_release.nginx_ingress, helm_release.cert_manager, helm_release.external_dns]
