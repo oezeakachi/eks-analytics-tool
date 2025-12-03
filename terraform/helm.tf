@@ -7,7 +7,7 @@ resource "helm_release" "nginx_ingress" {
   namespace        = "nginx-ingress"
 
   values = [
-    file("${path.module}/helm-values/nginx-ingress.yaml")
+    file("${path.module}../helm-values/nginx-ingress.yaml")
   ]
 
   depends_on = [module.eks]
@@ -22,7 +22,7 @@ resource "helm_release" "cert_manager" {
   namespace        = "cert-manager"
 
   values = [
-    file("${path.module}/helm-values/cert-manager.yaml")
+    file("${path.module}../helm-values/cert-manager.yaml")
   ]
 
   depends_on = [
@@ -39,7 +39,7 @@ resource "helm_release" "external_dns" {
   namespace        = "external-dns"
 
   values = [
-    file("${path.module}/helm-values/external-dns.yaml")
+    file("${path.module}../helm-values/external-dns.yaml")
   ]
 
   depends_on = [
@@ -58,7 +58,7 @@ resource "helm_release" "argocd_deploy" {
   namespace        = "argo-cd"
 
   values = [
-    file("${path.module}/helm-values/argocd.yaml")
+    file("${path.module}../helm-values/argocd.yaml")
   ]
 
   depends_on = [helm_release.nginx_ingress, helm_release.cert_manager, helm_release.external_dns]
@@ -76,7 +76,7 @@ resource "helm_release" "prometheus" {
   namespace        = "monitoring"
 
   values = [
-    file("${path.module}/helm-values/monitoring.yaml")
+    file("${path.module}../helm-values/monitoring.yaml")
   ]
 
   depends_on = [helm_release.nginx_ingress, helm_release.cert_manager, helm_release.external_dns]
