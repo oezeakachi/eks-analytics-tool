@@ -40,17 +40,19 @@ jobs:
           terraform_version: 1.7.0
 
       - name: Terraform Init
-        working-directory: ./terraform
-        run: terraform init
-        
+        run: |
+          cd terraform
+          terraform init
 
       - name: Terraform Plan
-        working-directory: ./terraform
-        run: terraform plan
+        run: |
+          cd terraform
+          terraform plan
 
       - name: Terraform Apply
-        working-directory: ./terraform
-        run: terraform apply -auto-approve
+        run: |
+          cd terraform
+          terraform apply -auto-approve
 
   k8s-deploy:
     needs: terraform-apply
