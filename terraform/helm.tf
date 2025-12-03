@@ -7,7 +7,7 @@ resource "helm_release" "nginx_ingress" {
   namespace        = "nginx-ingress"
 
   values = [
-    file("${path.module}../helm-values/nginx-ingress.yaml")
+    file("${path.module}/../helm-values/nginx-ingress.yaml")
   ]
 
   depends_on = [module.eks]
@@ -22,7 +22,7 @@ resource "helm_release" "cert_manager" {
   namespace        = "cert-manager"
 
   values = [
-    file("${path.module}../helm-values/cert-manager.yaml")
+    file("${path.module}/../helm-values/cert-manager.yaml")
   ]
 
   depends_on = [
@@ -39,7 +39,7 @@ resource "helm_release" "external_dns" {
   namespace        = "external-dns"
 
   values = [
-    file("${path.module}../helm-values/external-dns.yaml")
+    file("${path.module}/../helm-values/external-dns.yaml")
   ]
 
   depends_on = [
@@ -93,7 +93,7 @@ data "kubernetes_ingress_v1" "argocd" {
 
 resource "aws_route53_record" "argocd" {
   zone_id = local.zone_id
-  name    = "argocd.ahmedumami.click"
+  name    = "argocd.umami.click"
   type    = "CNAME"
   ttl     = 300
   records = [data.kubernetes_ingress_v1.argocd.status[0].load_balancer[0].ingress[0].hostname]
