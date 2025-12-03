@@ -39,7 +39,7 @@ jobs:
         with:
           terraform_version: 1.7.0
 
-      - name: Terraform Init
+      - name: Check Working dir
         run: |
           pwd
       
