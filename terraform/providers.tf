@@ -24,15 +24,15 @@ terraform {
   }
 
   backend "s3" {
-    bucket  = "eks--project"
+    bucket  = "eks--project-obi"
     key     = "eks-lab"
-    region  = "eu-west-2"
+    region  = "eu-west-1"
     encrypt = true
   }
 }
 
 provider "aws" {
-  region = "eu-west-2"
+  region = "eu-west-1"
 }
 data "aws_eks_cluster" "this" {
   name       = module.eks.cluster_name
