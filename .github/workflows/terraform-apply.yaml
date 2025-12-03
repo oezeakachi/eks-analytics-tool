@@ -49,9 +49,18 @@ jobs:
           terraform init
 
       - name: Terraform Plan
+        id: plan
+        continue-on-error: true
         run: |
           cd terraform
-          terraform plan
+          terraform plan -out=tfplan 2>&1 | tee plan-output.txt
+        
+      - name: Check Plan Status
+        run: |
+          if [ ${{ steps.plan.outcome }} == 'failure' ]; then
+            echo "Terraform plan failed. Check the logs above."
+            exit 1
+          fi
 
       - name: Terraform Apply
         run: |
